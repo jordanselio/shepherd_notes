@@ -8,6 +8,7 @@ required).
 Currently targets **Android only**.
 
 ![Schedule screen](docs/schedule_screenshot.png)
+![To-do screen](docs/todo_screenshot.png)
 
 ## Prerequisites
 
