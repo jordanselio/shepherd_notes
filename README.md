@@ -7,6 +7,8 @@ required).
 
 Currently targets **Android only**.
 
+![Schedule screen](docs/schedule_screenshot.png)
+
 ## Prerequisites
 
 - [Flutter SDK](https://docs.flutter.dev/get-started/install) (see
