@@ -1,17 +1,69 @@
-# shepherd_notes
+# Shepherd Notes
 
-A new Flutter project.
+A Flutter app for organizing recurring 1-on-1 and group Bible studies:
+schedule appointments, keep session notes, track prayer requests, and manage
+simple to-dos. Data is stored locally on the device (no account or server
+required).
 
-## Getting Started
+Currently targets **Android only**.
 
-This project is a starting point for a Flutter application.
+## Prerequisites
 
-A few resources to get you started if this is your first Flutter project:
+- [Flutter SDK](https://docs.flutter.dev/get-started/install) (see
+  `environment.sdk` in `pubspec.yaml` for the required Dart SDK version)
+- [Android Studio](https://developer.android.com/studio) with the Android
+  SDK and platform tools installed
+- A physical Android device with USB debugging enabled, or an Android
+  emulator set up through Android Studio
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+Confirm your setup is ready by running:
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```
+flutter doctor
+```
+
+Resolve any issues it reports before continuing.
+
+## Setup
+
+1. Clone the repo and move into it:
+
+   ```
+   git clone https://github.com/jordanselio/shepherd_notes.git
+   cd shepherd_notes
+   ```
+
+2. Install dependencies:
+
+   ```
+   flutter pub get
+   ```
+
+3. Connect an Android device (with USB debugging on) or start an emulator,
+   then confirm Flutter sees it:
+
+   ```
+   flutter devices
+   ```
+
+4. Run the app:
+
+   ```
+   flutter run
+   ```
+
+## Running tests
+
+```
+flutter test
+```
+
+## Project structure
+
+- `lib/models/` — data model classes (Appointment, PrayerRequest, Task, etc.)
+- `lib/data/database_helper.dart` — sqflite database setup, migrations, and
+  CRUD methods
+- `lib/screens/` — one screen per tab (Schedule, Appointments, Notes,
+  Prayer, To-do), plus their form sheets
+- `lib/widgets/` — shared, reusable UI components
+- `lib/theme/` — light/dark theme tokens and color helpers
