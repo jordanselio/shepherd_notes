@@ -37,7 +37,20 @@ class _GapItem extends _TimelineItem {
 }
 
 class ScheduleScreen extends StatefulWidget {
-  const ScheduleScreen({super.key});
+  /// When true, opens the New Appointment flow as soon as this screen
+  /// appears -- used when the TODAY widget's "+" button launches the app.
+  final bool autoOpenAddFlow;
+
+  /// When set, opens this appointment's detail screen as soon as this
+  /// screen appears -- used when a widget's appointment row launches the
+  /// app.
+  final int? focusAppointmentId;
+
+  const ScheduleScreen({
+    super.key,
+    this.autoOpenAddFlow = false,
+    this.focusAppointmentId,
+  });
 
   @override
   State<ScheduleScreen> createState() => _ScheduleScreenState();
@@ -60,6 +73,21 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     final now = DateTime.now();
     _selectedDate = DateTime(now.year, now.month, now.day);
     _loadAppointments();
+    if (widget.autoOpenAddFlow || widget.focusAppointmentId != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => _handleLaunch());
+    }
+  }
+
+  Future<void> _handleLaunch() async {
+    if (widget.autoOpenAddFlow) {
+      await _addAppointment();
+      return;
+    }
+    final id = widget.focusAppointmentId;
+    if (id != null) {
+      final appointment = await _db.getAppointmentById(id);
+      if (appointment != null && mounted) await _openAppointment(appointment);
+    }
   }
 
   Future<void> _loadAppointments() async {

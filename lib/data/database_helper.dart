@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -6,6 +8,7 @@ import '../models/follow_up_item.dart';
 import '../models/prayer_request.dart';
 import '../models/session.dart';
 import '../models/task.dart';
+import '../services/widget_service.dart';
 
 class DatabaseHelper {
   DatabaseHelper._();
@@ -203,11 +206,20 @@ class DatabaseHelper {
     }
   }
 
+  /// Fire-and-forget refresh of the home-screen widgets after a write to
+  /// appointments or tasks. Never awaited by callers: the widgets are a
+  /// supplementary surface and must never slow down or fail a DB write.
+  void _syncWidgets() {
+    unawaited(WidgetService.instance.refreshWidgets());
+  }
+
   // Appointments
 
   Future<int> insertAppointment(Appointment appointment) async {
     final db = await database;
-    return db.insert('appointments', appointment.toMap()..remove('id'));
+    final id = await db.insert('appointments', appointment.toMap()..remove('id'));
+    _syncWidgets();
+    return id;
   }
 
   Future<List<Appointment>> getAppointments() async {
@@ -239,6 +251,7 @@ class DatabaseHelper {
       where: 'id = ?',
       whereArgs: [appointment.id],
     );
+    _syncWidgets();
   }
 
   /// Soft-deletes the appointment: it disappears from Schedule and the
@@ -252,6 +265,7 @@ class DatabaseHelper {
       where: 'id = ?',
       whereArgs: [id],
     );
+    _syncWidgets();
   }
 
   // Sessions
@@ -430,7 +444,9 @@ class DatabaseHelper {
 
   Future<int> insertTask(Task task) async {
     final db = await database;
-    return db.insert('tasks', task.toMap()..remove('id'));
+    final id = await db.insert('tasks', task.toMap()..remove('id'));
+    _syncWidgets();
+    return id;
   }
 
   Future<void> updateTask(Task task) async {
@@ -441,6 +457,7 @@ class DatabaseHelper {
       where: 'id = ?',
       whereArgs: [task.id],
     );
+    _syncWidgets();
   }
 
   Future<void> setTaskCompleted(int id, bool completed) async {
@@ -453,11 +470,13 @@ class DatabaseHelper {
       where: 'id = ?',
       whereArgs: [id],
     );
+    _syncWidgets();
   }
 
   Future<void> deleteTask(int id) async {
     final db = await database;
     await db.delete('tasks', where: 'id = ?', whereArgs: [id]);
+    _syncWidgets();
   }
 
   Future<List<Map<String, Object?>>> getAllTasksWithAppointmentInfo() async {

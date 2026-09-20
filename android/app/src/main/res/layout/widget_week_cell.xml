@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- One cell of the TODAY widget's mini week strip. Added 7x via
+     RemoteViews.addView into widget_today's week_strip_container, each with
+     its own independent view-id scope. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:orientation="vertical"
+    android:gravity="center_horizontal">
+
+    <TextView
+        android:id="@+id/week_cell_letter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:textColor="@color/widget_text_secondary"
+        tools:text="T" />
+
+    <FrameLayout
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="1dp">
+        <FrameLayout
+            android:id="@+id/week_cell_today_bg"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:background="@drawable/widget_blue_dot"
+            android:visibility="gone" />
+        <TextView
+            android:id="@+id/week_cell_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/widget_text"
+            tools:text="15" />
+    </FrameLayout>
+
+    <ImageView
+        android:id="@+id/week_cell_dot"
+        android:layout_width="4dp"
+        android:layout_height="4dp"
+        android:layout_marginTop="1dp"
+        android:src="@drawable/widget_blue_dot"
+        android:visibility="invisible"
+        android:contentDescription="@null" />
+
+</LinearLayout>

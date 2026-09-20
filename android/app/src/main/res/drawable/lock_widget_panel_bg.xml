@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- RemoteViews cannot blur, so this is a solid ~65% opacity dark scrim
+     instead of the mockup's blurred glass panel, per spec: readable on any
+     wallpaper without blur support. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="@color/lock_widget_scrim" />
+    <corners android:radius="24dp" />
+</shape>

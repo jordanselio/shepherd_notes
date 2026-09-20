@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/widget_card_bg_large"
+    android:padding="16dp"
+    android:id="@+id/widget_root">
+
+    <!-- Header: TODAY / date, + button -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingBottom="8dp">
+        <LinearLayout
+            android:id="@+id/today_header_tap"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/today_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TODAY"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.06"
+                android:textColor="@color/widget_text_secondary" />
+            <TextView
+                android:id="@+id/today_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/widget_text"
+                tools:text="Tue, Sep 15" />
+        </LinearLayout>
+        <FrameLayout
+            android:id="@+id/plus_button"
+            android:layout_width="44dp"
+            android:layout_height="44dp">
+            <FrameLayout
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center"
+                android:background="@drawable/widget_plus_button_bg" />
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_widget_plus"
+                android:contentDescription="@null" />
+        </FrameLayout>
+    </LinearLayout>
+
+    <!-- Mini week strip: 7 cells added at render time via addView (each its
+         own RemoteViews inflated from widget_week_cell.xml), since a static
+         <include> would give every cell's children the same view ids and
+         only the first would ever update. Same reasoning for the agenda and
+         to-do row containers below. -->
+    <LinearLayout
+        android:id="@+id/week_strip_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="4dp"
+        android:paddingBottom="8dp" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/widget_divider" />
+
+    <!-- Empty / all-done state -->
+    <TextView
+        android:id="@+id/empty_state_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="12dp"
+        android:paddingBottom="4dp"
+        android:textSize="13sp"
+        android:textColor="@color/widget_text_secondary"
+        android:visibility="gone"
+        tools:text="Nothing scheduled today" />
+
+    <!-- Agenda rows, up to a small cap; see WidgetService/AgendaRows.kt. -->
+    <LinearLayout
+        android:id="@+id/agenda_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
+
+    <FrameLayout
+        android:id="@+id/todo_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
+        android:background="@color/widget_divider" />
+
+    <TextView
+        android:id="@+id/todo_header_label"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:letterSpacing="0.06"
+        android:textColor="@color/widget_text_secondary"
+        tools:text="TO-DO · 3 TODAY" />
+
+    <LinearLayout
+        android:id="@+id/todo_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" />
+
+    <TextView
+        android:id="@+id/todo_more_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="28dp"
+        android:paddingTop="2dp"
+        android:textSize="12sp"
+        android:textColor="@color/widget_text_secondary"
+        android:visibility="gone"
+        tools:text="+1 more" />
+
+</LinearLayout>

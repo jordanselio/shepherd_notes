@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Widget design tokens, light mode. Mirrors lib/theme/app_theme.dart's
+  ColorScheme/SurfaceTokens/CategoryColors so the widgets match the app.
+  Kept native (not read from Flutter) because RemoteViews needs plain
+  Android color resources.
+-->
+<resources>
+    <color name="widget_surface">#FFFEFB</color>
+    <color name="widget_text">#24211C</color>
+    <color name="widget_text_secondary">#6A6357</color>
+    <color name="widget_divider">#E8E4DA</color>
+    <color name="widget_blue_fill">#4F6BED</color>
+    <color name="widget_blue_text">#3F58D6</color>
+    <color name="widget_on_blue_fill">#FFFFFF</color>
+    <color name="widget_checkbox_ring">#C4BDAE</color>
+    <color name="widget_next_badge_bg">#E8ECFD</color>
+    <color name="widget_shadow">#4D0A0C1E</color>
+
+    <color name="widget_category_sage">#6E9B78</color>
+    <color name="widget_category_lavender">#8B7BB8</color>
+    <color name="widget_category_amber">#C58A3A</color>
+
+    <!-- Widget 4 (lock-screen-styled) always renders on a dark translucent
+         panel over the wallpaper, in both app themes, so its tokens are not
+         duplicated in values-night. -->
+    <color name="lock_widget_scrim">#A60E101C</color>
+    <color name="lock_widget_text">#FFFFFF</color>
+    <color name="lock_widget_text_85">#D9FFFFFF</color>
+    <color name="lock_widget_text_75">#BFFFFFFF</color>
+    <color name="lock_widget_text_82">#D1FFFFFF</color>
+    <color name="lock_widget_text_90">#E6FFFFFF</color>
+    <color name="lock_widget_divider">#2EFFFFFF</color>
+    <color name="lock_widget_next_bar">#8CA0FF</color>
+    <color name="lock_widget_next_badge_bg">#478CA0FF</color>
+    <color name="lock_widget_next_badge_text">#DDE3FF</color>
+    <color name="lock_widget_category_sage">#8DB897</color>
+    <color name="lock_widget_category_lavender">#A99BD6</color>
+    <color name="lock_widget_category_amber">#D9A55E</color>
+</resources>

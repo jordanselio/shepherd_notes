@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Vertical accent bar for the lock-screen widget's appointment rows.
+     Plain white, tinted per row via setColorFilter (category color, or the
+     lighter NEXT blue for the soonest one). -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="rectangle">
+    <solid android:color="#FFFFFFFF" />
+    <corners android:radius="2dp" />
+</shape>

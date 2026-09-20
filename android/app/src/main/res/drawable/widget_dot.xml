@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Plain white oval, meant to be tinted per instance at render time via
+     RemoteViews.setInt(id, "setColorFilter", color): used for category
+     dots and the current/next marker, whose color varies per row. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
+    <solid android:color="#FFFFFFFF" />
+</shape>

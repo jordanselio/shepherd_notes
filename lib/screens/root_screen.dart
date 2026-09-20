@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../services/widget_launch.dart';
+import '../services/widget_service.dart';
 import 'appointments_screen.dart';
 import 'notes_screen.dart';
 import 'prayer_requests_screen.dart';
@@ -14,16 +16,79 @@ class RootScreen extends StatefulWidget {
   State<RootScreen> createState() => _RootScreenState();
 }
 
-class _RootScreenState extends State<RootScreen> {
+class _RootScreenState extends State<RootScreen> with WidgetsBindingObserver {
   int _selectedIndex = 0;
 
-  static const _screens = [
-    ScheduleScreen(),
-    AppointmentsScreen(),
-    NotesScreen(),
-    PrayerRequestsScreen(),
-    TodoScreen(),
-  ];
+  // Non-null only for the one build right after a widget tap asked to open
+  // Schedule with an action; ScheduleScreen consumes it in its initState
+  // and it is not reused on later rebuilds.
+  bool _autoOpenAddFlow = false;
+  int? _focusAppointmentId;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    WidgetLaunch.instance.pending.addListener(_handleWidgetLaunch);
+    _handleWidgetLaunch();
+  }
+
+  @override
+  void dispose() {
+    WidgetLaunch.instance.pending.removeListener(_handleWidgetLaunch);
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      WidgetService.instance.refreshWidgets();
+    }
+  }
+
+  void _handleWidgetLaunch() {
+    final action = WidgetLaunch.instance.pending.value;
+    if (action == null) return;
+    WidgetLaunch.instance.consume();
+    setState(() {
+      switch (action) {
+        case OpenToday():
+          _selectedIndex = 0;
+        case OpenNewAppointment():
+          _selectedIndex = 0;
+          _autoOpenAddFlow = true;
+        case OpenAppointment(:final id):
+          _selectedIndex = 0;
+          _focusAppointmentId = id;
+        case OpenTodoTab():
+          _selectedIndex = 4;
+      }
+    });
+  }
+
+  /// Builds the five tab bodies. A method (not a cached list) because
+  /// Schedule needs to pick up any one-shot widget-launch action baked in
+  /// just before this runs; the flags are cleared right after so they don't
+  /// replay on a later rebuild that isn't following a fresh widget tap.
+  List<Widget> _buildScreens() {
+    final scheduleScreen = ScheduleScreen(
+      key: ValueKey('schedule-$_autoOpenAddFlow-$_focusAppointmentId'),
+      autoOpenAddFlow: _autoOpenAddFlow,
+      focusAppointmentId: _focusAppointmentId,
+    );
+    // These one-shot flags must not replay if the user simply switches back
+    // to this tab later.
+    _autoOpenAddFlow = false;
+    _focusAppointmentId = null;
+    return [
+      scheduleScreen,
+      const AppointmentsScreen(),
+      const NotesScreen(),
+      const PrayerRequestsScreen(),
+      const TodoScreen(),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +109,7 @@ class _RootScreenState extends State<RootScreen> {
     return AnnotatedRegion<SystemUiOverlayStyle>(
       value: overlayStyle,
       child: Scaffold(
-        body: _screens[_selectedIndex],
+        body: _buildScreens()[_selectedIndex],
         bottomNavigationBar: Container(
           decoration: BoxDecoration(
             border: Border(top: BorderSide(color: theme.dividerColor)),

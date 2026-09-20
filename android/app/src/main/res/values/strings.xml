@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="widget_today_description">Today\'s agenda and to-dos</string>
+    <string name="widget_next_up_description">Your next appointment</string>
+    <string name="widget_todo_description">Today\'s open to-dos</string>
+    <string name="widget_lock_today_description">Compact today summary for a wallpaper-style placement</string>
+</resources>

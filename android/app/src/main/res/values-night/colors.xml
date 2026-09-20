@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Widget design tokens, dark mode. Mirrors AppTheme.dark / SurfaceTokens.dark / CategoryColors.dark. -->
+<resources>
+    <color name="widget_surface">#1B1A17</color>
+    <color name="widget_text">#F1EEE7</color>
+    <color name="widget_text_secondary">#A39E93</color>
+    <color name="widget_divider">#2E2C27</color>
+    <color name="widget_blue_fill">#4F6BED</color>
+    <color name="widget_blue_text">#8CA0FF</color>
+    <color name="widget_on_blue_fill">#FFFFFF</color>
+    <color name="widget_checkbox_ring">#5A564E</color>
+    <color name="widget_next_badge_bg">#334F6BED</color>
+    <color name="widget_shadow">#66000000</color>
+
+    <color name="widget_category_sage">#8DB897</color>
+    <color name="widget_category_lavender">#A99BD6</color>
+    <color name="widget_category_amber">#D9A55E</color>
+</resources>
