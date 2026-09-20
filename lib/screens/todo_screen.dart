@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -25,11 +27,18 @@ class _TodoScreenState extends State<TodoScreen> {
   List<String?> _appointmentTypes = [];
   bool _loading = true;
   bool _doneExpanded = false;
+  Timer? _snackBarTimer;
 
   @override
   void initState() {
     super.initState();
     _loadTasks();
+  }
+
+  @override
+  void dispose() {
+    _snackBarTimer?.cancel();
+    super.dispose();
   }
 
   Future<void> _loadTasks() async {
@@ -86,19 +95,30 @@ class _TodoScreenState extends State<TodoScreen> {
     await _db.setTaskCompleted(task.id!, !wasDone);
     _loadTasks();
     if (!mounted) return;
-    ScaffoldMessenger.of(context).clearSnackBars();
-    ScaffoldMessenger.of(context).showSnackBar(
+    final messenger = ScaffoldMessenger.of(context);
+    _snackBarTimer?.cancel();
+    messenger.removeCurrentSnackBar();
+    messenger.showSnackBar(
       SnackBar(
         content: Text(wasDone ? 'Marked as open' : 'Marked as done'),
         action: SnackBarAction(
           label: 'Undo',
           onPressed: () async {
+            _snackBarTimer?.cancel();
             await _db.setTaskCompleted(task.id!, wasDone);
             _loadTasks();
           },
         ),
       ),
     );
+    // Flutter's built-in SnackBar auto-dismiss timer can get stuck (never
+    // fires) if the app is backgrounded/screen-locked while it's showing.
+    // This plain Timer is a backstop that force-removes it regardless.
+    _snackBarTimer = Timer(const Duration(seconds: 4), () {
+      if (mounted) {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      }
+    });
   }
 
   bool _isSameDate(DateTime a, DateTime b) {
