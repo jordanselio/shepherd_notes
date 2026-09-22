@@ -71,7 +71,17 @@ class _AppointmentDetailScreenState extends State<AppointmentDetailScreen>
       existing: _appointment,
     );
     if (result == null) return;
-    await _db.updateAppointment(result);
+    try {
+      await _db.updateAppointment(result);
+    } catch (e) {
+      debugPrint('Failed to save appointment: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not save changes. Please try again.')),
+        );
+      }
+      return;
+    }
     setState(() => _appointment = result);
   }
 

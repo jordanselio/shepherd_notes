@@ -101,7 +101,17 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   Future<void> _addAppointment() async {
     final result = await showAddAppointmentFlow(context);
     if (result == null) return;
-    await _db.insertAppointment(result);
+    try {
+      await _db.insertAppointment(result);
+    } catch (e) {
+      debugPrint('Failed to save appointment: $e');
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not save "${result.name}". Please try again.')),
+        );
+      }
+      return;
+    }
     _loadAppointments();
   }
 

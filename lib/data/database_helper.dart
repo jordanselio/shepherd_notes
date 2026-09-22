@@ -26,7 +26,7 @@ class DatabaseHelper {
     final path = join(dbPath, 'shepherd_notes.db');
     return openDatabase(
       path,
-      version: 4,
+      version: 5,
       onCreate: _createFreshSchema,
       onUpgrade: _upgrade,
       onConfigure: (db) async {
@@ -203,6 +203,45 @@ class DatabaseHelper {
           FOREIGN KEY (appointmentId) REFERENCES appointments (id) ON DELETE CASCADE
         )
       ''');
+    }
+    if (oldVersion < 5) {
+      // The original (pre-recurrence-feature) schema declared dayOfWeek
+      // NOT NULL, back when every appointment was a weekly recurring
+      // Bible study. ALTER TABLE can't drop a NOT NULL constraint, so
+      // when one-time events (recurrence == none, dayOfWeek == null)
+      // were added, every attempt to save one threw an unhandled
+      // SQLITE_CONSTRAINT_NOTNULL and was silently lost. Rebuild the
+      // table with dayOfWeek nullable, preserving all existing rows.
+      await db.execute('''
+        CREATE TABLE appointments_new (
+          id INTEGER PRIMARY KEY AUTOINCREMENT,
+          name TEXT NOT NULL,
+          type TEXT NOT NULL,
+          kind TEXT NOT NULL DEFAULT 'bibleStudy',
+          recurrence TEXT NOT NULL DEFAULT 'weekly',
+          dayOfWeek TEXT,
+          time TEXT NOT NULL,
+          endTime TEXT,
+          location TEXT,
+          startDate TEXT,
+          groupSize INTEGER,
+          isDeleted INTEGER NOT NULL DEFAULT 0
+        )
+      ''');
+      await db.execute('''
+        INSERT INTO appointments_new (
+          id, name, type, kind, recurrence, dayOfWeek, time, endTime,
+          location, startDate, groupSize, isDeleted
+        )
+        SELECT
+          id, name, type, kind, recurrence, dayOfWeek, time, endTime,
+          location, startDate, groupSize, isDeleted
+        FROM appointments
+      ''');
+      await db.execute('DROP TABLE appointments');
+      await db.execute(
+        'ALTER TABLE appointments_new RENAME TO appointments',
+      );
     }
   }
 

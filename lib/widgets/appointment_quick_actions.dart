@@ -48,7 +48,17 @@ Future<void> showAppointmentQuickActions(
   if (action == 'edit') {
     final result = await showAppointmentFormSheet(context, existing: appointment);
     if (result == null) return;
-    await DatabaseHelper.instance.updateAppointment(result);
+    try {
+      await DatabaseHelper.instance.updateAppointment(result);
+    } catch (e) {
+      debugPrint('Failed to save appointment: $e');
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not save changes. Please try again.')),
+        );
+      }
+      return;
+    }
     onChanged();
   } else if (action == 'delete') {
     final confirmed = await showDialog<bool>(
